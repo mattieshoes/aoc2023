@@ -6,11 +6,9 @@ my $part1 = 0;
 my %sums;
 for @lines -> $line {
     my @fields = split((':', '|'), $line);
-
     my ($card) := @fields[0] ~~ /(\d+)/;
     my @winners = split(/\s+/, @fields[1].trim);
     my @values = split(/\s+/, @fields[2].trim);
-   
     my $sum = 0;
     for @winners -> $w {
         for @values -> $v {
