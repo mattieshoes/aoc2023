@@ -7,3 +7,4 @@ Trying to do 10 different languages
 3. [X] Java
 4. [X] Raku
 5. [X] Perl
+6. [X] Lisp
