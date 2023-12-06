@@ -4,7 +4,7 @@
 sub calc($$) {
     my $time = shift;
     my $distance = shift;
-    $sum = 0;
+    my $sum = 0;
     for(my $hold = 0; $hold < $time; $hold++) {
         $sum++ if(($time - $hold) * $hold > $distance );
     }
@@ -26,4 +26,4 @@ for($race = 0; $race <= $#times; $race++) {
 print("Part 1: $part1\n");
 
 $part2 = &calc(join("", @times), join("", @distances));
-print("Part 2: $sum\n");
+print("Part 2: $part2\n");
