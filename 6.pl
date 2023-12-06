@@ -1,6 +1,5 @@
 #!/usr/bin/perl
 
-
 sub calc($$) {
     my $time = shift;
     my $distance = shift;
@@ -13,7 +12,6 @@ sub calc($$) {
 
 my @lines = `cat inputs/6`;
 chomp @lines;
-
 my @times = split(/\s+/, $lines[0]);
 my @distances = split(/\s+/, $lines[1]);
 shift @times;
