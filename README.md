@@ -2,10 +2,25 @@
 
 Trying to do 10 different languages
 
-1. [X] C
-2. [X] C++
-3. [X] Java
-4. [X] Raku
-5. [X] Perl
-6. [X] Lisp
-7. [X] Python
+1. C
+2. C++
+3. Java
+4. Raku
+5. Go
+6. Lisp
+7. Perl
+8. Python
+
+[ ] Ruby
+[ ] Javascript
+[ ] Rust
+[ ] Lua
+[ ] Scala
+[ ] Kotlin
+[ ] Clojure
+[ ] Elixir
+[ ] R
+[ ] Erlang
+[ ] Racket
+[ ] Swift
+[ ] Zig
