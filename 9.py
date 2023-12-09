@@ -5,9 +5,7 @@ import re
 def recurse(sequence):
     if set(sequence) == set([0]):
         return [0, 0]
-    new_sequence = []
-    for i in range(1, len(sequence), 1):
-        new_sequence.append(sequence[i] - sequence[i - 1])
+    new_sequence = [x - y for x, y in zip(sequence[1:], sequence[:-1])]
     val = recurse(new_sequence)
     return [sequence[0] - val[0], sequence[-1] + val[1]]
 
