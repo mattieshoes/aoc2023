@@ -18,10 +18,8 @@ Maybe:
 * Lua
 * Scala
 * Kotlin
-* Clojure
 * Elixir
 * R
 * Erlang
-* Racket
 * Swift
 * Zig
