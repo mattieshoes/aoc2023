@@ -10,10 +10,10 @@ Trying to do 10 different languages
 6. Lisp
 7. Perl
 8. Ruby
+9. Python
 
 Maybe:
 
-* Python
 * Javascript
 * Lua
 * Scala
