@@ -12,5 +12,4 @@ lines.each { |line|
   fields = line.split(/ /).map(&:to_i)
   ans = [ans, recurse(fields)].transpose.map(&:sum)
 }
-puts "Part 1: #{ans[1]}"
-puts "Part 2: #{ans[0]}"
+puts "Part 1: #{ans[1]}\nPart 2: #{ans[0]}"
