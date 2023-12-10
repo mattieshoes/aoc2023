@@ -9,18 +9,19 @@ Trying to do 10 different languages
 5. Go
 6. Lisp
 7. Perl
-8. Python
+8. Ruby
 
-[ ] Ruby
-[ ] Javascript
-[ ] Rust
-[ ] Lua
-[ ] Scala
-[ ] Kotlin
-[ ] Clojure
-[ ] Elixir
-[ ] R
-[ ] Erlang
-[ ] Racket
-[ ] Swift
-[ ] Zig
+Maybe:
+
+* Python
+* Javascript
+* Lua
+* Scala
+* Kotlin
+* Clojure
+* Elixir
+* R
+* Erlang
+* Racket
+* Swift
+* Zig
