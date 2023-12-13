@@ -38,6 +38,10 @@ def get_next(point):
 def get_square(point):
     return(lines[point[1]][point[0]])
 
+# sum tuple, for sanity
+def tsum(a, b):
+    return( (a[0]+b[0], a[1]+b[1]) )
+
 with open("inputs/10") as f:
     lines = f.read().rstrip("\n").split("\n")
 
@@ -62,82 +66,58 @@ while(True):
         visited.append(result[0])
 print(f"Part 1: {len(visited) // 2}")
 
-sys.setrecursionlimit(10000) # fill function is not gentle
 width = len(lines[0])
 height = len(lines)
 area_to_determine = width * height - len(visited)
 
 # track left of path vs right of path as sets
-left = set()
-right = set()
+lr = [set(), set()]
+visited_set = set(visited)
 
-# find the direction of movement for ease
+print("\tCalculating directions of travel on main path")
 def sub_point(n):
     return((n[1][0]-n[0][0], n[1][1]-n[0][1]))
 direction = list(map(sub_point, zip(visited[:-1], visited[1:])))
-direction.append( (visited[-1][0] - visited[0][0], visited[-1][1] - visited[0][1]) )
+direction.append( (visited[0][0] - visited[-1][0], visited[0][1] - visited[-1][1]) )
 
-# ghetto fill function.  Should flatten but won't.
-def fill(p, my_set):
-    if p[0] < 0 or p[1] < 0 or p[0] >= width or p[1] >= height:
-        return
-    if(not (p in visited)):
-        if(not (p in my_set)):
-            my_set.add(p)
-            offsets = [(-1, 0), (0, -1), (1, 0), (0, 1)]
-            for o in offsets:
-                fill((p[0]+o[0], p[1]+o[1]), my_set)
-
-
-#travel through loop from part 1, adding to left-hand and right-hand sets
+print("\tTraversing path marking left-hand and right-hand nodes")
 for i in range(len(visited)):
     if direction[i] == (-1, 0): # moving left
-        fill( (visited[i][0], visited[i][1] + 1), left) # down is left
-        fill( (visited[i][0], visited[i][1] - 1), right) # up is right
-        fill( (visited[i+1][0], visited[i+1][1] + 1), left) # down is left
-        fill( (visited[i+1][0], visited[i+1][1] - 1), right) # up is right
+        p = [[(visited[i][0], visited[i][1]+1), (visited[i][0]-1, visited[i][1]+1)],[(visited[i][0], visited[i][1]-1), (visited[i][0]-1, visited[i][1]-1)]]
     elif direction[i] == (0, -1): # moving up
-        fill( (visited[i][0]-1, visited[i][1]), left) # left is left
-        fill( (visited[i][0]+1, visited[i][1]), right) # right is right
-        fill( (visited[i+1][0]-1, visited[i+1][1]), left) # left is left
-        fill( (visited[i+1][0]+1, visited[i+1][1]), right) # right is right
+        p = [[(visited[i][0]-1, visited[i][1]), (visited[i][0]-1, visited[i][1]-1)], [(visited[i][0]+1, visited[i][1]), (visited[i][0]+1, visited[i][1]-1)]]
     elif direction[i] == (1, 0): # moving right
-        fill( (visited[i][0], visited[i][1] - 1), left) # up is left
-        fill( (visited[i][0], visited[i][1] + 1), right) # down is right
-        fill( (visited[i+1][0], visited[i+1][1] - 1), left) # up is left
-        fill( (visited[i+1][0], visited[i+1][1] + 1), right) # down is right
+        p = [[(visited[i][0], visited[i][1]-1), (visited[i][0]+1, visited[i][1]-1)],[(visited[i][0], visited[i][1]+1), (visited[i][0]+1, visited[i][1]+1)]]
     else: # moving down
-        fill( (visited[i][0] + 1, visited[i][1]), left) # right is left
-        fill( (visited[i][0] - 1, visited[i][1]), right) # left is right
-        fill( (visited[i+1][0] + 1, visited[i+1][1]), left) # right is left
-        fill( (visited[i+1][0] - 1, visited[i+1][1]), right) # left is right
+        p = [[(visited[i][0]+1, visited[i][1]), (visited[i][0]+1, visited[i][1]+1)],[(visited[i][0]-1, visited[i][1]), (visited[i][0]-1, visited[i][1]+1)]]
+    for i in range(2):
+        for pi in range(2):
+            if p[i][pi] not in visited_set:
+                lr[i].add(p[i][pi])
 
-    #when there's no more unallocated map, we can break out of loop
-    if len(left)+len(right) == area_to_determine:
-        break
+# fill function -- find neigbors not part of the main path, add to set
+def fill(my_set):
+    offsets = [(-1, 0), (0, -1), (1, 0), (0, 1)]
+    list_set = list(my_set)
+    for p in list_set:
+        for o in offsets:
+            neighbor = tsum(p, o)
+            if neighbor[0] >= 0 and neighbor[1] >= 0 and \
+                neighbor[0] < width and neighbor[1] < height and \
+                neighbor not in visited:
+                my_set.add(neighbor)
+    if len(my_set) == len(list_set):
+        return True
+    return False
 
-# silly printing of map
-# we're assuming there are more outside-bits than inside-bits because it's 
-# obvious from the map.  I guess in theory, we could grow the map until there
-# MUST be more outside than inside, but fill is already painful enough
 
-ls = '.'
-rs = 'o'
-part2 = len(left)
-if len(left) > len(right):
-    ls = 'o'
-    rs = '.'
-    part2 = len(right)
-for y in range(height):
-    for x in range(width):
-        if (x, y) in left:
-            print(ls, end="")
-        elif (x, y) in right:
-            print(rs, end="")
-        elif (x, y) in visited:
-            print(" ", end="")
-        else:
-            print("#", end="")
-    print()
-
+print("\tFlood filling until we can distinguish inside from outside")
+part2 = 0
+while part2 == 0:
+    found = False
+    for i in range(2):
+        result = fill(lr[i])
+        if result and (0,0) not in lr[i]:
+            part2 = len(lr[i])
+            break
 print(f"Part 2: {part2}")
