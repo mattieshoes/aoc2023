@@ -12,8 +12,8 @@ def calculate_load():
     return load
 
 # tilts board in direction specified
-# should clean up, but won't
 def tilt_board(direction="north"):
+    global position_hash
     if direction == 'north':
         for row in range(height):
             for col in range(width):
@@ -24,6 +24,7 @@ def tilt_board(direction="north"):
                         if board[row+offset][col] == 'O':
                             board[row][col] = 'O'
                             board[row+offset][col] = '.'
+                            position_hash ^= hv[row][col] ^ hv[row+offset][col]
                             break
     elif direction == 'south':
         for row in range(height-1, -1, -1):
@@ -35,6 +36,7 @@ def tilt_board(direction="north"):
                         if board[row+offset][col] == 'O':
                             board[row][col] = 'O'
                             board[row+offset][col] = '.'
+                            position_hash ^= hv[row][col] ^ hv[row+offset][col]
                             break
     elif direction == 'west':
         for col in range(width):
@@ -46,6 +48,7 @@ def tilt_board(direction="north"):
                         if board[row][col+offset] == 'O':
                             board[row][col] = 'O'
                             board[row][col+offset] = '.'
+                            position_hash ^= hv[row][col] ^ hv[row][col+offset]
                             break
     elif direction == 'east':
         for col in range(width-1, -1, -1):
@@ -57,12 +60,16 @@ def tilt_board(direction="north"):
                         if board[row][col+offset] == 'O':
                             board[row][col] = 'O'
                             board[row][col+offset] = '.'
+                            position_hash ^= hv[row][col] ^ hv[row][col+offset]
                             break
 
 with open("inputs/14") as f:
     lines = f.read().rstrip("\n").split("\n")
+
 height, width = len(lines), len(lines[0])
 board = [[x for x in line] for line in lines]
+position_hash = 0
+hv = [[random.getrandbits(64) for x in line] for line in lines]
 
 tilt_board()
 part1 = calculate_load()
@@ -71,30 +78,21 @@ print(f"Part 1: {part1}")
 part2 = 0
 board = [[x for x in line] for line in lines] # reset board to initial state
 
-# we're going to generate 64 bit hash keys describing the board in order to
-# detect when we've fallen into a cycle
-hash_map = {'.': 0, 'O': 1, '#': 2}
-hv = [[[random.getrandbits(64) for x in line] for line in lines] for i in range(3)]
-
-def get_hash_value():
-    val = 0
-    for r in range(height):
-        for c in range(width):
-            val ^= hv[hash_map[board[r][c]]][r][c]
-    return val 
-
 seen = dict() # seen[position_hash] -> cycle seen
 loads = [] 
 
 # iterate doing spin cycles, store hash in seen and load in loads
-# when position repeats, do math and spit out answer
+# when position repeats:
+# offset -> how many times until it starts repeating
+# cycle_length -> how long the cycle is
+# cycle_offset -> which part of the cycle hits on the 1 billionth spin cycle
+# pull the load for that bit of the cycle
 for i in range(1000000):
     tilt_board("north")
     tilt_board("west")
     tilt_board("south")
     tilt_board("east")
     
-    position_hash = get_hash_value()
     if position_hash in seen:
         cycle_length = i - seen[position_hash]
         offset = seen[position_hash] + 1
@@ -105,5 +103,4 @@ for i in range(1000000):
         break
     seen[position_hash] = i
     loads.append(calculate_load())
-
 print(f"Part 2: {part2}")
