@@ -12,8 +12,7 @@ def calculate_load():
     return load
 
 # tilts board in direction specified
-def tilt_board(direction="north"):
-    global position_hash
+def tilt_board(position_hash, direction="north"):
     if direction == 'north':
         for row in range(height):
             for col in range(width):
@@ -62,6 +61,7 @@ def tilt_board(direction="north"):
                             board[row][col+offset] = '.'
                             position_hash ^= hv[row][col] ^ hv[row][col+offset]
                             break
+    return position_hash
 
 with open("inputs/14") as f:
     lines = f.read().rstrip("\n").split("\n")
@@ -71,7 +71,7 @@ board = [[x for x in line] for line in lines]
 position_hash = 0
 hv = [[random.getrandbits(64) for x in line] for line in lines]
 
-tilt_board()
+tilt_board(position_hash)
 part1 = calculate_load()
 print(f"Part 1: {part1}")
 
@@ -88,10 +88,10 @@ loads = []
 # cycle_offset -> which part of the cycle hits on the 1 billionth spin cycle
 # pull the load for that bit of the cycle
 for i in range(1000000):
-    tilt_board("north")
-    tilt_board("west")
-    tilt_board("south")
-    tilt_board("east")
+    position_hash = tilt_board(position_hash, "north")
+    position_hash = tilt_board(position_hash, "west")
+    position_Hash = tilt_board(position_hash, "south")
+    position_hash = tilt_board(position_hash, "east")
     
     if position_hash in seen:
         cycle_length = i - seen[position_hash]
