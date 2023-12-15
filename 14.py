@@ -83,7 +83,7 @@ loads = []
 
 # iterate doing spin cycles, store hash in seen and load in loads
 # when position repeats:
-# offset -> how many times until it starts repeating
+# offset -> how many times until a cycle forms
 # cycle_length -> how long the cycle is
 # cycle_offset -> which part of the cycle hits on the 1 billionth spin cycle
 # pull the load for that bit of the cycle
@@ -97,8 +97,6 @@ for i in range(1000000):
         cycle_length = i - seen[position_hash]
         offset = seen[position_hash] + 1
         cycle_offset = (1000000000 - offset) % (cycle_length)
-        print(f"Cycle found on {i+1}: Cycle length {cycle_length} with", \
-              f"starting offset {offset}, meaning cycle_offset {cycle_offset}")
         part2 = loads[seen[position_hash]+cycle_offset]
         break
     seen[position_hash] = i
