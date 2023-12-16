@@ -11,10 +11,10 @@ Trying to do 10 different languages
 7. Perl
 8. Ruby
 9. Python
+10. Javascript (node)
 
 Maybe:
 
-* Javascript
 * Lua
 * Scala
 * Kotlin
