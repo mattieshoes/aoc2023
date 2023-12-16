@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 from collections import namedtuple
+from multiprocessing import Pool
+from functools import reduce
 
 # Queue entry contains row, column, and a direction tuple
 Node = namedtuple('Node', ['row', 'col', 'd'])
@@ -55,10 +57,21 @@ part1 = calculate(0,0,(0,1))
 print(f"Part 1: {part1}")
 
 part2 = 0
+# generate list of arguments to calculate()
+jobs = []
 for r in range(height):
-    part2 = max(part2, calculate(r, 0, (0, 1)))
-    part2 = max(part2, calculate(r, width-1, (0, -1)))
+    jobs.append((r, 0, (0,1)))
+    jobs.append((r, width-1, (0,-1)))
 for c in range(width):
-    part2 = max(part2, calculate(0, c, (1, 0)))
-    part2 = max(part2, calculate(height-1, c, (-1, 0)))
+    jobs.append((0, c, (1,0)))
+    jobs.append((height-1, c, (-1,0)))
+
+# multiprocessing all the calculate jobs
+part2 = 0
+pool = Pool(processes=4)
+res = pool.starmap(calculate, jobs)
+part2 = reduce(max, res)
+pool.close()
+pool.join()
+
 print(f"Part 2: {part2}")
