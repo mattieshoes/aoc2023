@@ -4,7 +4,7 @@ import sys
 
 # moves beam of light recursively
 def recurse(r, c, d, e):
-    if r>=len(lines) or c>=len(lines[0]) or r<0 or c<0 or (r,c) in e[d]:
+    if r>=height or c>=width or r<0 or c<0 or (r,c) in e[d]:
         return
     e[d].add((r,c))
     tile = lines[r][c]
