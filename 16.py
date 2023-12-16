@@ -44,8 +44,7 @@ def calculate(row, col, direction):
     queue = [Node(row, col, direction)]
     # expand nodes from queue until queue is empty
     while len(queue) > 0:
-        queue.extend(expand_node(queue[0], visited, energized))
-        del queue[0]
+        queue.extend(expand_node(queue.pop(), visited, energized))
     return(len(energized))
 
 with open("inputs/16") as f:
