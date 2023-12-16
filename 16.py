@@ -16,24 +16,24 @@ def expand_node(n, visited, energized):
     # add to visited and energized 
     visited.add(n)
     energized.add((n.row, n.col))
-    tile = lines[n.row][n.col]
     # return continuation nodes
-    if tile == '.':
+    if lines[n.row][n.col] == '.': # continues straight
         return([Node(n.row + n.d[0], n.col + n.d[1], n.d)])
-    elif tile == '\\':
+    elif lines[n.row][n.col] == '\\': # flips row and col directions
         return([Node(n.row + n.d[1], n.col + n.d[0], (n.d[1], n.d[0]))])
-    elif tile == '/':
+    elif lines[n.row][n.col] == '/': # flips and inverses row and col directions
         return([Node(n.row - n.d[1], n.col - n.d[0], (-n.d[1], -n.d[0]))])
-    elif tile == '-':
-        if n.d[1] != 0:
+    elif lines[n.row][n.col] == '-':
+        if n.d[1] != 0: # no split if parallel 
             return([Node(n.row + n.d[0], n.col + n.d[1], n.d)])
-        else:
+        else: # splits to a right-hand and left-hand turn
             return([Node(n.row, n.col-1, (0, -1)), Node(n.row, n.col+1, (0,1))])
-    elif tile == '|':
-        if n.d[0] != 0:
+    elif lines[n.row][n.col] == '|':
+        if n.d[0] != 0: # no split if parallel
             return([Node(n.row + n.d[0], n.col + n.d[1], n.d)])
-        else:
+        else: # splits into a right-hand and left-hand turn
             return([Node(n.row-1, n.col, (-1, 0)), Node(n.row+1, n.col, (1,0))])
+    return [] # never reached, but for sanity...
 
 # gets the number of energized tiles given a start point
 def calculate(row, col, direction):
