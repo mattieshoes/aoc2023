@@ -71,19 +71,23 @@ def dijkstra(min_count, max_count):
         # find the lowest cost boundary and expand it
         min_cost = 999999999
         min_k = ''
+
+        # tried heapq for boundary -- dict was faster
+        # batch process all the entries with min cost
+        # to reduce iterating over the dict
         for k in boundary:
             if boundary[k] < min_cost:
+                tmp = {}
                 min_cost = boundary[k]
                 min_k = k
-        tmp = {}
-        for k in boundary:
-            if boundary[k] == min_cost:
-                tmp[k] = min_cost
+                tmp[k] = boundary[k]
+            elif boundary[k] == min_cost:
+                tmp[k] = boundary[k]
 
         for k in tmp:
             if k.r == target_row and k.c == target_col: 
-                return min_cost
-            expand(k, min_cost, min_count, max_count)
+                return boundary[k]
+            expand(k, boundary[k], min_count, max_count)
 
 with open("inputs/17") as f:
     lines = f.read().rstrip("\n").split("\n")
