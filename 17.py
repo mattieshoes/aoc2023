@@ -75,13 +75,15 @@ def dijkstra(min_count, max_count):
             if boundary[k] < min_cost:
                 min_cost = boundary[k]
                 min_k = k
+        tmp = {}
+        for k in boundary:
+            if boundary[k] == min_cost:
+                tmp[k] = min_cost
 
-        # check for target
-        if min_k.r == target_row and min_k.c == target_col:
-            return min_cost
-
-        # expand node
-        expand(min_k, min_cost, min_count, max_count)
+        for k in tmp:
+            if k.r == target_row and k.c == target_col: 
+                return min_cost
+            expand(k, min_cost, min_count, max_count)
 
 with open("inputs/17") as f:
     lines = f.read().rstrip("\n").split("\n")
