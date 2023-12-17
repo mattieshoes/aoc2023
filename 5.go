@@ -73,8 +73,6 @@ func main() {
     
     start = time.Now()
 
-    // leaving in debugging prints because it's goddamned beautiful
-
     // convert seeds to intervals
     intervals := make([][]int64, 0)
     for i := 0; i < len(seeds); i += 2 {
@@ -82,52 +80,52 @@ func main() {
     }
 
     // iterate through maps
-    for a, m := range mapping {
-        fmt.Println(intervals)
-        fmt.Println("Mapping ", a, m)
+    for _, m := range mapping {
+        //fmt.Println(intervals)
+        //fmt.Println("Mapping ", a, m)
         // iterate through rules, splitting on rule-start intersections
-        for b, r := range m {
-            fmt.Println("\tRule ", b, r)
+        for _, r := range m {
+            //fmt.Println("\tRule ", b, r)
             for i := 0; i < len(intervals); i++ {
-                fmt.Println("\t\tRule start", r[0], "Interval", intervals[i])
+                //fmt.Println("\t\tRule start", r[0], "Interval", intervals[i])
                 if r[0] > intervals[i][0] && r[0] < intervals[i][1] {
-                        fmt.Print("\t\t\tSplit on start ")
+                        //fmt.Print("\t\t\tSplit on start ")
                         intervals = append(intervals, []int64{r[0], intervals[i][1]})
                         intervals[i][1] = r[0]
-                        fmt.Println(intervals[i], intervals[len(intervals) - 1])
+                        //fmt.Println(intervals[i], intervals[len(intervals) - 1])
                 }
             }
         }
         // iterate through rules a second time splitting on rule-end intersections
-        for b, r := range m {
-            fmt.Println("\tRule ", b, r)
+        for _, r := range m {
+            //fmt.Println("\tRule ", b, r)
             for i := 0; i < len(intervals); i++ {
-                fmt.Println("\t\tRule end", r[1], "Interval", intervals[i])
+                //fmt.Println("\t\tRule end", r[1], "Interval", intervals[i])
                 if r[1] > intervals[i][0] && r[1] < intervals[i][1] {
-                        fmt.Print("\t\t\tSplit on end ")
+                        //fmt.Print("\t\t\tSplit on end ")
                         intervals = append(intervals, []int64{r[1], intervals[i][1]})
                         intervals[i][1] = r[1]
-                        fmt.Println(intervals[i], intervals[len(intervals) - 1])
+                        //fmt.Println(intervals[i], intervals[len(intervals) - 1])
                 }
             }
         }
         // iterate through intervals (which now don't intersect), applying mappings
-        fmt.Println(intervals)
+        //fmt.Println(intervals)
         for i := 0; i < len(intervals); i++ {
             // apply any relevant mappings
             for _, r := range m {
                 if intervals[i][0] >= r[0] && intervals[i][0] < r[1] {
-                    fmt.Print("\t", intervals[i])
+                    //fmt.Print("\t", intervals[i])
                     intervals[i][0] += r[2]
                     intervals[i][1] += r[2]
-                    fmt.Println(" ->", intervals[i], "based on rule", r)
+                    //fmt.Println(" ->", intervals[i], "based on rule", r)
                     break
                 }
             }
         }
         // theoretically stitch together intervals at this point, but eff that
     }
-    fmt.Println(intervals)
+    //fmt.Println(intervals)
     var part2 int64 = math.MaxInt64
     for _, x := range(intervals) {
         if x[0] < part2 {
