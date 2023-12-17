@@ -68,8 +68,8 @@ for c in range(width):
 # multiprocessing all the calculate jobs
 part2 = 0
 pool = Pool(processes=4)
-res = pool.starmap(calculate, jobs)
-part2 = reduce(max, res)
+results = pool.starmap(calculate, jobs)
+part2 = max(results)
 pool.close()
 pool.join()
 
